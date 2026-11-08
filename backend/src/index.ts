@@ -1,6 +1,7 @@
 import express from "express";
 import type { ErrorRequestHandler } from "express";
 import projectRoutes from "./routes/projectRoutes";
+import taskRoutes from "./routes/taskRoutes";
 import { pool } from "./db";
 import { AppError } from "./errors/AppError";
 import { ZodError } from "zod";
@@ -8,7 +9,9 @@ import { ZodError } from "zod";
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
+
 app.use("/projects", projectRoutes);
+app.use("/tasks", taskRoutes);
 
 app.get("/live", (_req, res) => {
   res.status(200).json({ status: "ok" });

@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import ProjectService from "../services/projectService";
+import ProjectService from "../services/ProjectService";
 import {
   projectBodySchema,
   projectIdParamsSchema,

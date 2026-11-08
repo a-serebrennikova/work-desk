@@ -1,6 +1,9 @@
 import express from "express";
+import type { ErrorRequestHandler } from "express";
 import projectRoutes from "./routes/projectRoutes";
 import { pool } from "./db";
+import { AppError } from "./errors/AppError";
+import { ZodError } from "zod";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -21,10 +24,33 @@ app.get("/health", async (_req, res) => {
   }
 });
 
+const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
+  if (error instanceof ZodError) {
+    res.status(400).json({
+      error: "Invalid request",
+      details: error.issues.map((issue) => ({
+        path: issue.path.join("."),
+        message: issue.message,
+      })),
+    });
+    return;
+  }
+
+  if (error instanceof AppError) {
+    res.status(error.statusCode).json({ error: error.message });
+    return;
+  }
+
+  console.error("Unhandled request error:", error);
+  res.status(500).json({ error: "Internal Server Error" });
+};
+
+app.use(errorHandler);
+
 async function startServer() {
   try {
     await pool.query("SELECT 1");
-    
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

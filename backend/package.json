@@ -7,7 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.ts",
     "dev": "node --watch --env-file=.env --import=tsx src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "lint:staged": "lint-staged",
+    "prepare": "cd .. && husky .husky",
     "migrate": "node-pg-migrate --envPath ./.env"
+  },
+  "lint-staged": {
+    "src/**/*.ts": "eslint --max-warnings=0"
   },
   "keywords": [],
   "author": "",
@@ -20,11 +28,17 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",
     "@types/pg": "^8.23.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "node-pg-migrate": "^7.6.1",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.59.2"
   }
 }
